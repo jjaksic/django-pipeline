@@ -133,7 +133,7 @@ class Compressor(object):
         if self.embeddable(public_path, variant):
             return "__EMBED__%s" % public_path
         if not os.path.isabs(asset_path):
-            asset_path = self.relative_path(public_path)
+            asset_path = self.relative_url(public_path)
         return settings.PIPELINE_URL + asset_path[1:]
 
     def embeddable(self, path, variant):
@@ -205,10 +205,11 @@ class Compressor(object):
             path = os.path.join(start, path)
         return os.path.normpath(path)
 
-    def relative_path(self, absolute_path):
+    def relative_url(self, absolute_path):
         """Rewrite paths relative to the output stylesheet path"""
         absolute_path = self.absolute_path(absolute_path, settings.PIPELINE_ROOT)
-        return os.path.join(os.sep, relpath(absolute_path, settings.PIPELINE_ROOT))
+        relative_url = os.path.join(os.sep, relpath(absolute_path, settings.PIPELINE_ROOT))
+        return relative_url if os.sep=='/' else relative_url.replace(os.sep, '/')
 
     def read_file(self, path):
         """Read file content in binary mode"""
