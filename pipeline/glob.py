@@ -49,6 +49,8 @@ def iglob(pathname):
 
 def glob1(dirname, pattern):
     try:
+        if not os.path.isdir(storage.path(dirname)):
+            return []
         directories, files = storage.listdir(dirname)
         names = directories + files
     except NotImplementedError:
